@@ -1,0 +1,13 @@
+NXP Software Content Register
+
+Release name: Zephyr SmartWatch
+Release version: 2.1
+
+Outgoing License: MIT
+License File:     LICENSE
+Description: Zephyr SmartWatch demo based on i.MX RT500
+Release location: https://github.com/nxp-zephyr/apps_zephyr/tree/SmartWatch
+Origin:	NXP user interface assets converted to LVGL format (MIT)
+	NXP user interface source code (BSD-3-clause)
+	Zephyr Project (Apache-2.0) - https://github.com/zephyrproject-rtos/zephyr
+

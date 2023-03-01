@@ -1,0 +1,53 @@
+# Copyright 2023 NXP
+# SPDX-License-Identifier: Apache-2.0
+
+config VGLITE
+	bool "Enable VGLite module"
+	default y
+	select THREAD_LOCAL_STORAGE # Required for OSA
+	select SYS_HEAP_RUNTIME_STATS # Required for OSA
+	select REQUIRES_FULL_LIBC # VGLite needs full fat libC for math functions
+	depends on DT_HAS_NXP_VGLITE_ENABLED
+	help
+	  Enables VGLite module, which provides acceleration framework for
+	  vivante GPUs
+
+if VGLITE
+
+config VGLITE_COMMAND_THREAD_STACK_SIZE
+	int "VGLite GPU command queue thread stack size"
+	default 1024
+	help
+	  Stack size for VGLite command thread, which will post commands from
+	  a queue to the GPU
+
+config VGLITE_COMMAND_QUEUE_LEN
+	int "Length of VGLite command queue"
+	default 8
+	help
+	  Length of command queue for VGLite. Maximum number of pending
+	  GPU commands from software
+
+config VGLITE_HEAP_SIZE
+	hex "Size of VGLite allocation heap"
+	default 0x100000
+	help
+	  Size of VGLite allocation heap. Used for the VGLite command buffer,
+	  as well as allocations the framework itself makes.
+
+config VGLITE_ALLOC_ALIGNMENT
+	int
+	default 64
+	help
+	  Allocation alignment for contiguously allocated memory within VGLite
+	  framework
+
+# Enable VGLite layer for LVGL if it is present
+if LVGL
+
+config LV_USE_GPU_NXP_VG_LITE
+	default y
+
+endif # LVGL
+
+endif # VGLITE

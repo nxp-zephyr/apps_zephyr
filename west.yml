@@ -1,0 +1,37 @@
+manifest:
+  defaults:
+    remote: zephyrproject-rtos
+
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+    - name: nxp-appcodehub
+      url-base: https://github.com/nxp-appcodehub
+    - name: nxp-forks
+      url-base: https://github.com/NXP-Zephyr
+  projects:
+    - name: zephyr
+      remote: nxp-forks
+      revision: 291e25e179bc7f6c9b9dc1f95916fb70c41192b1
+      import: false
+      west-commands: scripts/west-commands.yml
+      import:
+        # Clone CMSIS version used by Zephyr manifest
+        name-allowlist:
+          - cmsis
+    - name: hal_nxp
+      remote: nxp-forks
+      revision: e366ea4a8a3b4bc05a371bc2c87f9dc1c84493ed
+      path: modules/hal/nxp
+      groups:
+        - hal
+    - name: lvgl
+      revision: e4339eb7989697becdfc696586531cfca02a3ebd
+      remote: nxp-forks
+      path: modules/lib/gui/lvgl
+    - name: ap-dvs-pvt-sensor
+      remote: nxp-appcodehub
+      revision: fc62a7895ff3a590b11df6791fe398ace23216f3
+      path: modules/hal/appswpacks-dvs-pvt-sensor
+  self:
+    path: nxp
