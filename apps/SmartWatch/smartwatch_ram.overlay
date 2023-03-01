@@ -1,0 +1,17 @@
+/*
+ * Copyright 2023, NXP
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+	/*
+	 * Move flash region to SRAM, so that code and rodata will be linked
+	 * there instead of into FlexSPI. Note some large LVGL assets will
+	 * still be located in the flash region.
+	 */
+	chosen {
+		zephyr,flash = &sram_code;
+	};
+};
+
