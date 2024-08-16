@@ -1,0 +1,31 @@
+<data:item xmlns:data="data" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="data ../../xsd/alp.xsd" type="demo" format="zephyr" versionSchema="1.0.0" name="smartwatch zephyr demo" uuid="8c468b78-4029-4c81-9211-3f03ad3e52f7">
+    <display_title>
+        SmartWatch Zephyr Demo
+    </display_title>
+    <overview>
+        <![CDATA[Wearable example application optimized for the i.MX RT500 MCU.&nbsp; Leverages display driver to MIPI smart wearable display.&nbsp; Power-optimized reference for battery-powered devices. Leverages Zephyr’s Power Management subsystem.&nbsp; Demonstrates power-optimization techniques for applications.&nbsp; UI created with LVGL and NXP’s&nbsp;<a href="https://www.nxp.com/design/software/development-software/gui-guider:GUI-GUIDER">GUI-Guider tool</a>.&nbsp; Professional LVGL graphics with multiple animated watch screens.&nbsp; Leverages GPU acceleration to offload CPU.&nbsp; &nbsp;<br>]]>
+    </overview>
+    <toolchains>
+        <toolchain name="vscode"></toolchain>
+    </toolchains>
+    <families>
+        <family name="imxrt"></family>
+    </families>
+    <nxp_compatible_hw>
+        <hw id="VAL-MIMXRT500"></hw>
+    </nxp_compatible_hw>
+    <nxp_ebh_hw>
+        <ebh id="nxp_g1120b0mipi"></ebh>
+    </nxp_ebh_hw>
+    <peripherals>
+        <peripheral name="clocks"></peripheral>
+        <peripheral name="display"></peripheral>
+        <peripheral name="dma"></peripheral>
+    </peripherals>
+    <categories>
+        <category name="graphics"></category>
+        <category name="low_power"></category>
+        <category name="rtos"></category>
+        <category name="ui"></category>
+    </categories>
+</data:item>

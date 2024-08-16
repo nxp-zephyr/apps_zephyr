@@ -1,0 +1,114 @@
+/*
+ * Copyright 2023-2024 NXP
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+	soc {
+		/* Use all 5MB of SRAM */
+		/delete-node/ sram@30018000;
+		sram: sram@30000000 {
+			ranges = <
+				0x00000000 0x10000000 DT_SIZE_M(5)
+				0x20000000 0x30000000 DT_SIZE_M(5) >;
+			#address-cells = < 0x1 >;
+			#size-cells = < 0x1 >;
+			sram_copy: memory@20000000 {
+				compatible = "mmio-sram";
+				reg = < 0x20000000 DT_SIZE_K(2688) >;
+			};
+			/*
+			 * The first 0x1BFFF bytes of SRAM are reserved
+			 * for the ROM, and it will not perform a Load-to-RAM.
+			 * boot into that location. Note that the ROM headers
+			 * take up 0x1000 bytes, so we can
+			 * start the image location at 0x1B000.
+			 */
+			sram_rom: memory@0 {
+				compatible = "mmio-sram";
+				reg = < 0x00000000 DT_SIZE_K(108) >;
+			};
+			sram_code: memory@1B000 {
+				compatible = "mmio-sram";
+				reg = < 0x0001B000 DT_SIZE_K(2724) >;
+			};
+			sram0: memory@202C4000 {
+				compatible = "mmio-sram";
+				reg = < 0x202C4000 DT_SIZE_K(2288) >;
+			};
+			sram1: memory@40140000 {
+				compatible = "zephyr,memory-region", "mmio-sram";
+				reg = < 0x40140000 0x4000 >;
+				zephyr,memory-region = "SRAM1";
+			};
+		};
+
+		flexspi_region: flexspi@18000000 {
+			compatible = "zephyr,memory-region";
+			reg = <0x182A0000 DT_SIZE_M(60)>;
+			zephyr,memory-region = "GFX";
+		};
+	};
+
+	leds {
+		/* For debugging:
+		*	- CLKOUT, J18-p1, P2_29
+		*	- dbg_p1, J28-p1, P4_28
+		*/
+		debug_pin1: dbg_p1 {
+			label = "Debug Pin1";
+			gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>;
+			status = "okay";
+		};
+	};
+};
+
+&cpu0 {
+	/* Removes Deep Sleep (Suspend) option from PM subsystem */
+	//cpu-power-states = < &idle >;
+};
+
+&suspend {
+	/* Keep Powered in Deep Sleep */
+	deep-sleep-config =
+		/* PDSLEEPCFG0: RBBs, LPOSC, PMIC_MODE=1 */
+		< 0xC802 >,
+		/* PDSLEEPCFG1: SRAM_SLEEP, SDMA_SRAM, FlexSPI0_SRAM */
+		< 0x80010004 >,
+		/* PDSLEEPCFG2: keep all SRAM powered */
+		< 0xFFFFFFFF >,
+		/* PDSLEEPCFG3: no System SRAM peripheries */
+		< 0x0 >;
+};
+
+&os_timer {
+	status = "okay";
+	wakeup-source;
+};
+
+/* Disable the unused CTimers */
+&ctimer0 {
+	status = "disabled";
+};
+&ctimer1 {
+	status = "disabled";
+};
+&ctimer2 {
+	status = "disabled";
+};
+&ctimer3 {
+	status = "disabled";
+};
+&ctimer4 {
+	status = "disabled";
+};
+
+&mipi_dsi {
+	phy-clock = < 192000000 >;
+};
+
+/* Disable Flexcomm12.  PIO4_30 input has high leakage on EVK */
+&flexcomm12 {
+	status = "disabled";
+};

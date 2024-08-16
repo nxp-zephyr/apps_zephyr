@@ -1,0 +1,38 @@
+/*
+ * Copyright 2023-2024 NXP
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+	soc {
+		sram: sram@30000000 {
+			sram0: memory@202C4000 {
+				/* When SMARTWATCH_REDUCE_RAM=y, can 
+				 * reduce RAM size
+				 */
+				reg = < 0x202C4000 DT_SIZE_K(1264) >;
+			};
+			/* When SMARTWATCH_REDUCE_RAM=y, remaining SRAM
+			 * is powered off to improve battery life
+			 */
+			sram_unpowered: memory@20400000 {
+				compatible = "mmio-sram";
+				reg = < 0x20400000 DT_SIZE_M(1) >;
+			};
+		};
+	};
+};
+
+&suspend {
+	/* Keep Powered in Deep Sleep */
+	deep-sleep-config =
+		/* PDSLEEPCFG0: RBBs, LPOSC, PMIC_MODE=1 */
+		< 0xC802 >,
+		/* PDSLEEPCFG1: SRAM_SLEEP, SDMA_SRAM, FlexSPI0_SRAM */
+		< 0x80010004 >,
+		/* PDSLEEPCFG2: power off some of the SRAM */
+		< 0x0FFFFFF9 >,
+		/* PDSLEEPCFG3: no System SRAM peripheries */
+		< 0x0 >;
+};

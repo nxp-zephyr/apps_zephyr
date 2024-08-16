@@ -1,0 +1,55 @@
+# Copyright 2023 NXP
+# SPDX-License-Identifier: Apache-2.0
+
+# Source Kconfig file from VGLite port
+rsource "vglite-port/Kconfig"
+
+# Config options for SmartWatch app
+
+config SMARTWATCH_IN_RAM_APP
+	bool "Move all code and non-LVGL rodata to internal SRAM"
+	default n
+
+config SMARTWATCH_IN_RAM_DIGITAL_SCREEN
+	bool "Place all data and assets for the Digital Watch screen in SRAM"
+	default n
+	depends on LVGL && SMARTWATCH_IN_RAM_APP
+
+config SMARTWATCH_REDUCE_RAM
+	bool "minimizes SRAM used by application"
+	default n
+
+config SMARTWATCH_PVT_SENSOR
+	bool "Enable PVT Sensor to reduce VDDCORE voltage and reduce power"
+	default n
+	select EVENTS
+	# prebuilt lippvt.a uses VFP arguments, need to build app with CONFIG_FPU
+	select FPU
+
+config SMARTWATCH_FOR_MEASUREMENTS
+	bool "When measuring power consumption, helps keep measurements consistent"
+	default n
+
+if SMARTWATCH_IN_RAM_APP
+
+	FLEXSPI_PATH:=$(dt_nodelabel_path,flexspi)
+	SRAM_PATH:=$(dt_nodelabel_path,sram_code)
+	FLEXSPI_BASE:=$(dt_node_reg_addr_hex,$(FLEXSPI_PATH),1)
+	SRAM_BASE:=$(dt_node_reg_addr_hex,$(SRAM_PATH))
+
+	# Adjust the LMA of the output file to reside in FlexSPI, so that the
+	# image will be loaded there. The ROM bootloader will then load the
+	# application into internal SRAM
+	config BUILD_OUTPUT_ADJUST_LMA
+		default "$(FLEXSPI_BASE)-$(SRAM_BASE)"
+
+endif # SMARTWATCH_IN_RAM_APP
+
+config LV_MEM_SIZE_KILOBYTES
+	default 64 if SMARTWATCH_REDUCE_RAM
+	default 128
+
+config VGLITE_HEAP_SIZE
+	default 0x8000 if SMARTWATCH_REDUCE_RAM
+
+source "Kconfig.zephyr"
