@@ -1,0 +1,14 @@
+NXP Software Content Register
+
+Release name: FacialDetect
+Release version: 1.0
+
+Outgoing License: Apache-2.0
+License File:     License.txt
+Description:      Zephyr Facial Detection demo based on i.MX RT1060 and MCXN947
+Release location: https://github.com/nxp-zephyr/apps_zephyr/tree/FacialDetect
+Origin: NXP (Apache-2.0)
+        NXP (BSD-3-clause)
+        Zephyr Project (Apache-2.0) - https://github.com/zephyrproject-rtos/zephyr
+        TensorFlow Lite (Apache-2.0) - https://github.com/tensorflow/tensorflow
+        adobe-fonts (OFL-1.1 SIL Open Font License 1.1 ) - https://github.com/adobe-fonts/source-sans

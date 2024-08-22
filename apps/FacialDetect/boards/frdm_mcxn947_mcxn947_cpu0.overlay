@@ -1,0 +1,40 @@
+/*
+ * Copyright 2024, NXP
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/* Resize SRAMX to avoid memory used by SmartDMA firmware */
+/delete-node/ &sramx;
+
+/ {
+	chosen {
+		zephyr,camera = &video_sdma;
+
+		/* Use buffer for model to stitch camera slices together.
+		 * Place model buffer in SRAMX */
+		zephyr,modelbuf = &sramx;
+	};
+};
+
+&sram0 {
+	/* Increase size of SRAM region */
+	reg = < 0x20000000 DT_SIZE_K(408) >;
+};
+
+&sram {
+	sramx: memory@4000800 {
+		compatible = "zephyr,memory-region", "mmio-sram";
+		/* Avoid SRAMX memory used by SmartDMA firmware */
+		reg = < 0x4000800  DT_SIZE_K(94) >;
+		zephyr,memory-region = "SRAM1";
+		zephyr,memory-attr = <( DT_MEM_ARM(ATTR_MPU_RAM) )>;
+	};
+};
+
+/* Rotate the display to portrait mode */
+&st7796s {
+	madctl = <0x88>;
+	height = <480>;
+	width = <320>;
+};

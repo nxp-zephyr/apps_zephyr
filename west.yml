@@ -1,0 +1,35 @@
+manifest:
+  defaults:
+    remote: zephyrproject-rtos
+
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+    - name: nxp-upstream
+      url-base: https://github.com/nxp-upstream
+    - name: nxp-mcuxpresso
+      url-base: https://github.com/nxp-mcuxpresso
+  projects:
+    - name: zephyr
+      remote: nxp-upstream
+      revision: 86733ded7f1974fa4f254e4f69f13489f5b42cf4
+      import: false
+      west-commands: scripts/west-commands.yml
+      import:
+        # By using name-allowlist we can clone only the modules that are
+        # strictly needed by the application.
+        name-allowlist:
+          - cmsis
+          - segger
+    - name: hal_nxp
+      remote: nxp-upstream
+      revision: 92c9061719d48dda030cf8a7cda4c47ee7f44471
+      path: modules/hal/nxp
+      groups:
+        - hal
+    - name: mcux-sdk-middleware-tensorflow
+      remote: nxp-mcuxpresso
+      revision: MCUX_2.16.000
+      path: modules/lib/tflite-micro
+  self:
+    path: nxp

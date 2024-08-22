@@ -1,0 +1,51 @@
+# Copyright 2024 NXP
+# SPDX-License-Identifier: Apache-2.0
+
+# Config options for app
+
+config APP_LOG_LEVEL
+	int "Log Level for application"
+
+config APP_TENSOR_ARENA_SIZE_KB
+	int "size of arena in KB"
+	default 200
+
+config APP_CONVERT_DISPLAY
+	bool "converts video buffer before writing to display"
+	depends on DISPLAY
+
+config APP_RESIZE_FOR_MODEL
+	bool "Resizes frame before model processes"
+
+config APP_DISPLAY_BANNER
+	bool "Displays text banner on bottom of display, with inference results"
+	depends on DISPLAY
+
+config MCUX_HAS_NPU
+	bool "SOC has NPU"
+
+if APP_CONVERT_DISPLAY
+	config CONVDISP_BUF_POOL_SZ_MAX
+		int "Maximum size in bytes of each buffer in the CONVDISP pool"
+
+	config CONVDISP_BUF_POOL_NUM_MAX
+		int "Maximum number of buffers in the CONVDISP pool"
+
+	config APP_USE_PXP
+		bool "use PXP for conversion"
+
+	if APP_USE_PXP
+		config APP_PXP_FLIP_HORIZONTAL
+			bool "uses PXP to flip frame horizontally"
+	endif # APP_USE_PXP
+endif # APP_CONVERT_DISPLAY
+
+if APP_RESIZE_FOR_MODEL
+	config APP_EXTRACT_WIDTH
+		int "width of image extracted from camera frame in pixels"
+
+	config APP_EXTRACT_HEIGHT
+		int "height of image extracted from camera frame in pixels"
+endif # APP_RESIZE_FOR_MODEL
+
+source "Kconfig.zephyr"

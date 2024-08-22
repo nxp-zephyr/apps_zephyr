@@ -1,0 +1,41 @@
+/*
+ * Copyright 2024, NXP
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+ / {
+	chosen {
+		zephyr,arena = &ocram2; /* Place tensorArena in OCRAM2 */
+	};
+};
+
+/* Increase DTCM for model. */
+&itcm {
+	reg = < 0x0 DT_SIZE_K(64) >;
+};
+&dtcm {
+	reg = < 0x20000000 DT_SIZE_K(384) >;
+};
+&ocram {
+	reg = < 0x20280000 DT_SIZE_K(64) >;
+};
+&flexram {
+	flexram,bank-spec = <FLEXRAM_OCRAM>,
+			    <FLEXRAM_OCRAM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_ITCM>,
+			    <FLEXRAM_ITCM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_DTCM>,
+			    <FLEXRAM_DTCM>;
+};
+
