@@ -1,6 +1,6 @@
 /*
  *    Copyright (c) 2014 - 2020 Vivante Corporation
- *    Copyright 2023 NXP
+ *    Copyright 2023-2024 NXP
  *
  *    Permission is hereby granted, free of charge, to any person obtaining
  *    a copy of this software and associated documentation files (the
@@ -68,8 +68,12 @@ static struct k_thread command_thread;
 /* Message queue */
 K_MSGQ_DEFINE(command_queue, sizeof(struct vg_lite_queue),
             CONFIG_VGLITE_COMMAND_QUEUE_LEN, 4);
+struct vglite_sem {
+    struct k_sem sem;
+    bool in_use;
+};
 /* Message queue event semaphores */
-static struct k_sem command_sems[TASK_LENGTH];
+static struct vglite_sem command_sems[TASK_LENGTH];
 
 
 #if !defined(VG_DRIVER_SINGLE_THREAD)
@@ -95,7 +99,7 @@ void command_thread_entry(void *arg1, void *arg2, void* arg3)
             node.event->signal = VG_LITE_IDLE;
         }
 
-        k_sem_give(&command_sems[node.event->semaphore_id]);
+        k_sem_give(&command_sems[node.event->semaphore_id].sem);
     }
 
 }
@@ -255,7 +259,7 @@ int32_t vg_lite_os_submit(uint32_t context,
 /* Wait for event completion */
 int32_t vg_lite_os_wait(uint32_t timeout, vg_lite_os_async_event_t *event)
 {
-    k_sem_take(&command_sems[event->semaphore_id], K_FOREVER);
+    k_sem_take(&command_sems[event->semaphore_id].sem, K_FOREVER);
     return VG_LITE_SUCCESS;
 }
 
@@ -311,14 +315,19 @@ int32_t vg_lite_os_init_event(vg_lite_os_async_event_t *event,
                                       uint32_t semaphore_id,
                                       int32_t state)
 {
-    if (event->semaphore_id >= TASK_LENGTH) {
+    if (semaphore_id >= TASK_LENGTH) {
         return VG_LITE_INVALID_ARGUMENT;
     }
 
+    if (command_sems[semaphore_id].in_use) {
+        return VG_LITE_ALREADY_EXISTS;
+    }
+
+    command_sems[semaphore_id].in_use = true;
     event->semaphore_id = semaphore_id;
     event->signal = state;
 
-    k_sem_init(&command_sems[event->semaphore_id], 0, 1);
+    k_sem_init(&command_sems[event->semaphore_id].sem, 1, 1);
     return VG_LITE_SUCCESS;
 }
 
@@ -329,7 +338,8 @@ int32_t vg_lite_os_delete_event(vg_lite_os_async_event_t *event)
         return VG_LITE_INVALID_ARGUMENT;
     }
 
-    k_sem_reset(&command_sems[event->semaphore_id]);
+    k_sem_reset(&command_sems[event->semaphore_id].sem);
+    command_sems[event->semaphore_id].in_use = false;
 
     return VG_LITE_SUCCESS;
 }
