@@ -151,6 +151,8 @@ int32_t vg_lite_os_allocate_contiguous(unsigned long size,
     *logical = ptr;
     /* Physical address will always be same as logical, MMU not supported. */
     *physical = (uint32_t)(*logical);
+    /* Record memory address, this is what the free function will be called with */
+    *node = ptr;
     return VG_LITE_SUCCESS;
 }
 
