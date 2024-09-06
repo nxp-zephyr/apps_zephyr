@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018 Jan Van Winkel <jan.van_winkel@dxplore.eu>
- * Copyright 2023 NXP
+ * Copyright 2023-2024 NXP
  *
  * Originated from:
  * https://github.com/zephyrproject-rtos/zephyr/blob/main/samples/subsys/display/lvgl/src/main.c
@@ -12,6 +12,7 @@
 #include <zephyr/device.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/kernel.h>
+#include <vg_lite.h>
 
 #ifdef CONFIG_SHELL
 	#include <zephyr/shell/shell.h>
@@ -244,6 +245,12 @@ static int time_change(const struct shell *shell, int32_t argc, char **argv){
 SHELL_CMD_REGISTER(time, NULL, "Toggle LED command", time_change);
 #endif /* CONFIG_SHELL */
 
+#define VG_LITE_COMMAND_BUFFER_SIZE                     (128 << 10) /* 128 KB */
+
+/* Default tessellation window width and height, in pixels */
+#define DEFAULT_VG_LITE_TW_WIDTH                        128 /* pixels */
+#define DEFAULT_VG_LITE_TW_HEIGHT                       128 /* pixels */
+
 void lvgl_thread(void *dummy1, void *dummy2, void *dummy3)
 {
 	ARG_UNUSED(dummy1);
@@ -262,6 +269,23 @@ void lvgl_thread(void *dummy1, void *dummy2, void *dummy3)
 	const struct device *display_dev;
 	int ret;
 
+#ifdef CONFIG_LV_USE_GPU_NXP_VG_LITE
+	/*
+	 * We must call vg_lite_init() from any thread using the GPU. Since
+	 * we render on the LVGL thread, call vg_lite_init() here
+	 */
+	if (vg_lite_init(DEFAULT_VG_LITE_TW_WIDTH, DEFAULT_VG_LITE_TW_HEIGHT) != VG_LITE_SUCCESS) {
+	    printk("VGLite init error\n");
+	    return;
+	}
+
+	if (vg_lite_set_command_buffer_size(VG_LITE_COMMAND_BUFFER_SIZE) != VG_LITE_SUCCESS) {
+	    printk("VGLite set command buffer fail\n");
+	    return;
+	}
+
+#endif
+
 	display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
 	if (!device_is_ready(display_dev)) {
 		printk("Device not ready, aborting test");
@@ -275,7 +299,7 @@ void lvgl_thread(void *dummy1, void *dummy2, void *dummy3)
 	lv_scr_load(guider_ui.ui_S0_Splash);
 	IdentifyScreens();
 
-	while (1) 
+	while (1)
 	{
 		/* Take from the touch interrupt semaphore.
 			* We timeout after 1000ms, as we still want to
@@ -292,7 +316,7 @@ void lvgl_thread(void *dummy1, void *dummy2, void *dummy3)
 			if(ptrScreen[MainScreenCnt][SubScreenCnt] == guider_ui.ui_S2_Watch_Analog || ptrScreen[MainScreenCnt][SubScreenCnt] == guider_ui.ui_S1_Watch_Digital || ptrScreen[MainScreenCnt][SubScreenCnt] == guider_ui.ui_SLowPower){
 				update_lvtask_delay();
 			}
-			
+
 			lv_task_handler();
 		} else
 		{
