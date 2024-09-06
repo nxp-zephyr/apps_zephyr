@@ -230,6 +230,15 @@ int32_t vg_lite_os_unlock()
     return VG_LITE_SUCCESS;
 }
 
+int32_t vg_lite_os_wait_event(vg_lite_os_async_event_t *event)
+{
+    if (event->semaphore_id >= TASK_LENGTH) {
+        return VG_LITE_INVALID_ARGUMENT;
+    }
+
+    k_sem_take(&command_sems[event->semaphore_id].sem, K_FOREVER);
+    return VG_LITE_SUCCESS;
+}
 
 /* Submit command to VGLite command queue thread */
 int32_t vg_lite_os_submit(uint32_t context,
@@ -245,14 +254,19 @@ int32_t vg_lite_os_submit(uint32_t context,
     node.cmd_offset = offset;
     node.cmd_size = size;
     node.event = event;
-    curContext = context;
 
+    event->signal = VG_LITE_IN_QUEUE;
     /* Send event to queue */
     ret = k_msgq_put(&command_queue, &node, K_FOREVER);
     if (ret != 0) {
         return VG_LITE_MULTI_THREAD_FAIL;
     }
-    event->signal = VG_LITE_IN_QUEUE;
+
+    curContext = context;
+
+    if (vg_lite_os_wait_event(event) != VG_LITE_SUCCESS) {
+        return VG_LITE_MULTI_THREAD_FAIL;
+    }
 
     return VG_LITE_SUCCESS;
 }
