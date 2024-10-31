@@ -9,10 +9,12 @@ manifest:
       url-base: https://github.com/nxp-appcodehub
     - name: nxp-forks
       url-base: https://github.com/NXP-Zephyr
+    - name: nxp-upstream
+      url-base: https://github.com/nxp-upstream
   projects:
     - name: zephyr
       remote: nxp-forks
-      revision: 291e25e179bc7f6c9b9dc1f95916fb70c41192b1
+      revision: d146cdedecdf8aa9eb54a1928583227dbb5e039d
       import: false
       west-commands: scripts/west-commands.yml
       import:
@@ -27,7 +29,7 @@ manifest:
         - hal
     - name: lvgl
       revision: e4339eb7989697becdfc696586531cfca02a3ebd
-      remote: nxp-forks
+      remote: nxp-upstream
       path: modules/lib/gui/lvgl
     - name: ap-dvs-pvt-sensor
       remote: nxp-appcodehub
