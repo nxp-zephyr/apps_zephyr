@@ -1,7 +1,7 @@
 NXP Software Content Register
- 
+
 Release name: SmartWatch
-Release version: 2.2
+Release version: 2.3
 
 Outgoing License: LA_OPT_Online Code Hosting NXP_Software_License - v1.2 October 2023
 License File:     License.txt
