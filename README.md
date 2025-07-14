@@ -23,6 +23,8 @@ using the MCUXpresso Installer to install all the tools and dependencies.  This
 tool is installed if using the VS Code MCUXpresso extension, see the
 [wiki](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki/Dependency-Installation).
 
+This demo uses the Zephyr SDK v0.16.1 to build the app.
+
 ## Cloning the application repo 
 The typical Zephyr development flow
 is used by this repo.  This uses the West tool, and requires these tools and
@@ -33,15 +35,32 @@ supported are:
 
 ### Cloning and building with VS Code
 - Follow the steps at [MCUXpresso for Visual Studio Code](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki).  This includes using NXP's MCUXpresso Installer to install all the needed tools and dependencies for using Zephyr with VS Code.  Review these steps for how to import a Zephyr repo, and how to import a Zephyr sample application from that repo.
-- In VS Code, using the MCUXpresso extension, open the **Import Repository** wizard.  This example creates a folder called `zephyrApps` for the workspace.  Import the repo `https://github.com/nxp-zephyr/apps_zephyr`, and set the Revision to `SmartWatch`.
+- These steps use NXP's [Application Code Hub](https://mcuxpresso.nxp.com/appcodehub) to find and import this demo.  In VS Code, using the MCUXpresso extension, in the **Quickstart Panel**, open **Application Code Hub**.
 
-  ![Import Repo](./docs/Import_SmartWatch_branch.png)
+  ![Open Application Code Hub](./docs/Open_ACH.png)
 
-Then you can **Import Example from Repository**.  The example below imports the `SmartWatch` app for the `mimxrt595_evk_cm33` board:
+- Search or filter for the app.  The unique name of this demo is **dm-smartwatch-zephyr-demo**.  Select the smartwatch card to select that app.  Browse to an empty folder to clone the app, this example creates a folder called `smartwatch` for the workspace.  Click **Import Project**.  Note, this step takes some time to clone all the repos.
 
-  ![Import example](./docs/Import_SmartWatch.png)
+  ![Import FacialDetect app](./docs/ACH_open_SW.png)
 
-Then follow the steps detailed at [MCUXpresso for Visual Studio Code](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki) to build and debug the sample application.  Detailed [Zephyr lab guides](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki/Training-Zephyr-Getting-Started-RT1060) are also provided at that wiki.
+When the import completes, the new repo is shown in the MCUXpresso extension:
+
+  ![Repository imported](./docs/Repo_Imported.png)
+
+- In the Quickstart Panel, select **Import Example from Repository**
+
+  ![Import example from repo](./docs/Import_example_from_repo.png)
+
+- Import the example with these settings:
+  - Repository: the repo imported from Application Code Hub
+  - Zephyr SDK: v0.16.1
+  - Board: **mimxrt595_evk_cm33**
+  - Template (application in repo): nxp/apps/SmartWatch
+  - App Type: Repository Application
+
+  ![Import SmartWatch app](./docs/Import_SW_example.png)
+
+Then follow the steps detailed at [MCUXpresso for Visual Studio Code](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki) to build and debug the sample application.  Detailed [Zephyr lab guides](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki/Training-Zephyr-Getting-Started) are also provided at that wiki.
 
 ### Cloning and building with CLI 
 Start in the directory you want the zephyrApps folder located:
@@ -62,7 +81,10 @@ This demo leverages several optimizations to reduce power consumption and extend
 
 ## Setting CMake variables in MCUXpresso extension for VS Code
 See setting [CMake Variables](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki/CMake#cmake-variables).
-* Open the project file `zephyrapps/nxp/apps/SmartWatch/CMakePresets.json`
+* Open the project file `SmartWatch/CMakePresets.json`
+
+  ![Open CmakePresets.json](./docs/CMakePresets.png)
+
 * Add the CMake variables to the `cacheVariables` section in the desired Preset.  Clean the project and build.  The example below adds to the default *debug* preset:
 ```
   "configurePresets": [
@@ -70,16 +92,20 @@ See setting [CMake Variables](https://github.com/nxp-mcuxpresso/vscode-for-mcux/
       "name": "debug",
       "displayName": "debug",
       "generator": "Ninja",
-      "binaryDir": "${fileDir}/build",
+      "binaryDir": "${fileDir}/${presetName}",
       "inherits": "debug-env",
       "cacheVariables": {
         "APP_DIR": "${fileDir}",
         "BOARD": "mimxrt595_evk_cm33",
         "CMAKE_BUILD_TYPE": "debug",
+        "ZEPHYR_BASE": "$env{ZEPHYR_BASE}",
         "SMARTWATCH_IN_RAM_APP": "y",
         "SMARTWATCH_REDUCE_RAM": "y",
-        "ZEPHYR_BASE": "$env{ZEPHYR_BASE}"
-      }
+        "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "$env{binaryDir}",
+        "CMAKE_LIBRARY_OUTPUT_DIRECTORY": "$env{binaryDir}",
+        "CMAKE_ARCHIVE_OUTPUT_DIRECTORY": "$env{binaryDir}"
+      },
+      "toolchainFile": ""
     },
 ```
 
