@@ -1,7 +1,7 @@
 # NXP Application Code Hub
 [<img src="https://mcuxpresso.nxp.com/static/icon/nxp-logo-color.svg" width="100"/>](https://www.nxp.com)
 
-## Facial Detection Zephyr Demo
+## Facial Detection Zephyr Demo - see [training](https://www.nxp.com/design/design-center/training/TIP-PORTING-ZEPHYR-APP-IMXRT-MCX)
 Multiple Face detection based on a machine learning algorithm.  A portable Zephyr application that runs on MCXN947 with ML accelerated by the NPU, and on i.MX RT1060.  This demo analyzes images from a camera, displays the image on the display, and reports when it detects a face.
 
 ![](docs/FD_Boards.png)
