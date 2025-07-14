@@ -5,9 +5,9 @@ zephyrApps is a collection of demos, apps, etc. organized in different Git branc
 The list of branches in the repo include:
 * main
   * this README
-* FacialDetect
+* [FacialDetect](https://github.com/nxp-zephyr/apps_zephyr/blob/FacialDetect/README.md)
   * Multiple face detect demo running on MCXN947 and i.MX RT1060.
-* SmartWatch
+* [SmartWatch](https://github.com/nxp-zephyr/apps_zephyr/blob/SmartWatch/README.md)
   * Wearable example application optimized for the i.MX RT500 MCU
 
 # Getting started with a branch
