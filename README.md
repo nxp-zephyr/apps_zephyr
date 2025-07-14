@@ -24,6 +24,8 @@ zephyrApps is a West manifest repository.  It uses West to pull in the Zephyr re
 
 Install all the needed tools and dependencies for using Zephyr.  NXP recommends using the MCUXpresso Installer to install all the tools and dependencies.  This tool is installed if using the VS Code MCUXpresso extension, see the [wiki](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki/Dependency-Installation).
 
+Zephyr SDK v0.16.8 is used to build this app.
+
 ## 2. Hardware<a name="step2"></a>
 The demo runs on two platforms:
 
@@ -81,17 +83,30 @@ The typical Zephyr development flow is used by this demo.  This uses the West to
 
 ### Cloning and building with VS Code
 - Follow the steps at [MCUXpresso for Visual Studio Code](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki).  This includes using NXP's MCUXpresso Installer to install all the needed tools and dependencies for using Zephyr with VS Code.  Review these steps for how to import a Zephyr repo, and how to import a Zephyr sample application from that repo.
-- In VS Code, using the MCUXpresso extension, open the **Import Repository** wizard.  This example creates a folder called `zephyrApps` for the workspace.  Import the repo `https://github.com/nxp-zephyr/apps_zephyr`, and set the Revision to `FacialDetect`.
+- These steps use NXP's [Application Code Hub](https://mcuxpresso.nxp.com/appcodehub) to find and import this demo.  In VS Code, using the MCUXpresso extension, in the **Quickstart Panel**, open **Application Code Hub**.
 
-  ![Import Repo](./docs/FD_Import_Repo.png)
+  ![Open Application Code Hub](./docs/Open_ACH.png)
 
-Then you can **Import Example from Repository**.  The example below imports the `FacialDetect` app for the `mimxrt1060_evkb` board:
+- Search or filter for the app.  The unique name of this demo is **dm-facialdetect-zephyr-demo**.  Select the facialdetect card to select that app.  Browse to an empty folder to clone the app, this example creates a folder called `facialdetect` for the workspace.  Click **Import Project**.  Note, this step takes some time to clone all the repos.
 
-  ![Import example](./docs/FD_Import_App_RT1060.png)
+  ![Import FacialDetect app](./docs/ACH_Open_FD.png)
 
-For the FRDM-MCXN947 board, **Import Example from Repository** for the `frdm_mcxn947/mcxn947/cpu0` board:
+When the import completes, the new repo is shown in the MCUXpresso extension:
 
-  ![Import example](./docs/FD_Import_App_MCX.png)
+  ![Repository imported](./docs/Repo_Imported.png)
+
+- In the Quickstart Panel, select **Import Example from Repository**
+
+  ![Import example from repo](./docs/Import_example_from_repo.png)
+
+- Import the example with these settings:
+  - Repository: the repo imported from Application Code Hub
+  - Zephyr SDK: v0.16.8
+  - Board: this example runs on 2 boards, **frdm_mcxn947 cpu0** or **mimxrt1060_evkb**
+  - Template (application in repo): nxp/apps/FacialDetect
+  - App Type: Repository Application
+
+  ![Import FacialDetect app](./docs/Import_FD_example.png)
 
 Then follow the steps detailed at [MCUXpresso for Visual Studio Code](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki) to build and debug the sample application.  Detailed [Zephyr lab guides](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki/Training-Zephyr-Getting-Started) are also provided at that wiki.
 

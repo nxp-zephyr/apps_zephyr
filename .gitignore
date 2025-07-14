@@ -1,4 +1,7 @@
-/build
-/apps/FacialDetect/.vscode
-/apps/FacialDetect/__repo__
-/apps/FacialDetect/build
+**/build
+**/.vscode
+**/__repo__
+**/debug
+**/release
+**/CMakePresets.json
+**/mcux_include.json
