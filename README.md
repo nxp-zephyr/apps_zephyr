@@ -23,7 +23,7 @@ using the MCUXpresso Installer to install all the tools and dependencies.  This
 tool is installed if using the VS Code MCUXpresso extension, see the
 [wiki](https://github.com/nxp-mcuxpresso/vscode-for-mcux/wiki/Dependency-Installation).
 
-This demo uses the Zephyr SDK v0.16.1 to build the app.
+This demo uses the Zephyr SDK v0.16.1 to build the app.  See [Installing a Zephyr SDK version](https://community.nxp.com/t5/Zephyr-Project-Knowledge-Base/Installing-a-Zephyr-SDK-version/ta-p/2205211).
 
 ## Cloning the application repo 
 The typical Zephyr development flow
