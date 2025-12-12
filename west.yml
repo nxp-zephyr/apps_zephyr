@@ -12,9 +12,10 @@ manifest:
     - name: nxp-upstream
       url-base: https://github.com/nxp-upstream
   projects:
-    - name: zephyr
+    - name: nxp-zephyr
       remote: nxp-forks
-      revision: d146cdedecdf8aa9eb54a1928583227dbb5e039d
+      revision: 9f2bc109df5091b5c71f810cf49c59caed560849
+      path: zephyr
       import: false
       west-commands: scripts/west-commands.yml
       import:
@@ -23,7 +24,7 @@ manifest:
           - cmsis
     - name: hal_nxp
       remote: nxp-forks
-      revision: e366ea4a8a3b4bc05a371bc2c87f9dc1c84493ed
+      revision: 74f200945c4497bc913a4ab9758470aa1dcc1504
       path: modules/hal/nxp
       groups:
         - hal
